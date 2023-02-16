@@ -26,13 +26,14 @@ class Tienda(QtWidgets.QMainWindow):
 
         if rows:
             fila = [dato.text() for dato in rows]
-            print(fila)
+            #print(fila)
         else:
             return
         self.carrito.append(str(''+fila[0]+': '+fila[5]+'€'))
         self.cestaPedido.addItem(str(''+fila[0]+': '+fila[5]+'€'))
         self.sumatorio = self.sumatorio + float(str(fila[5]))
-        print(self.carrito)
+        #print(self.carrito)
+        self.Comprar.setEnabled(True)
 
 
     def cancelarboton(self):
@@ -40,6 +41,8 @@ class Tienda(QtWidgets.QMainWindow):
         self.precioFinal.setText('')
         self.sumatorio = 0.0
         self.carrito = []
+        self.Comprar.setEnabled(False)
+        self.Factura.setEnabled(False)
 
     def llenarlista_(self):
         # conexion a base de datos mysql existente
@@ -74,8 +77,10 @@ class Tienda(QtWidgets.QMainWindow):
 
     def comprarboton(self):
         self.precioFinal.setText(str(self.sumatorio)+' €')
+        self.Factura.setEnabled(True)
 
     def imprimirfactura(self):
+        print('Factura Imprimida')
         w, h = A4
         c = canvas.Canvas("factura.pdf", pagesize=A4)
         c.drawImage("Imagenes/comprar.png", 50, h-100, width=50, height=50)
@@ -94,6 +99,12 @@ class Tienda(QtWidgets.QMainWindow):
         c.drawText(text)
         c.showPage()
         c.save()
+        self.cestaPedido.clear()
+        self.precioFinal.setText('')
+        self.sumatorio = 0.0
+        self.carrito = []
+        self.Comprar.setEnabled(False)
+        self.Factura.setEnabled(False)
 
 
 if __name__ == '__main__':
